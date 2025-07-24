@@ -21,16 +21,33 @@ export function CopyGuruButton({ data }) {
             return;
         }
 
-        const judul = `Absensi ${data.tanggal || 'Tanggal Tidak Ada'} - ${data.sesi || 'Sesi Tidak Ada'}`;
-        const daftarGuru = data.guru.map((g) => {
-            const kelas = g.kelas || 'Kelas Tidak Ada'; // fallback jika tidak ada
-            const statusText =
-                g.status === "hadir"
-                    ? "Hadir"
-                    : `Tidak Hadir${g.keterangan ? ` - ${g.keterangan}` : ""}`;
-            return `${kelas}  ${g.nama} (${statusText})`;
-        });
+        // Fungsi kapitalisasi huruf pertama
+        const kapitalisasi = (str) =>
+            str ? str.charAt(0).toUpperCase() + str.slice(1) : 'Sesi Tidak Ada';
 
+        // Fungsi ubah tanggal ke format "23 Juli 2025"
+        const formatTanggal = (tanggalString) => {
+            if (!tanggalString) return 'Tanggal Tidak Ada';
+            const bulanIndonesia = [
+                "Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                "Juli", "Agustus", "September", "Oktober", "November", "Desember"
+            ];
+            const tgl = new Date(tanggalString);
+            const hari = tgl.getDate();
+            const bulan = bulanIndonesia[tgl.getMonth()];
+            const tahun = tgl.getFullYear();
+            return `${hari} ${bulan} ${tahun}`;
+        };
+
+        const judul = `Absensi ${formatTanggal(data.tanggal)} - ${kapitalisasi(data.sesi)}`;
+
+        const daftarGuru = data.guru.map((g) => {
+            const kelas = g.kelas || 'Kelas Tidak Ada';
+            const nama = g.nama || 'Nama Tidak Ada';
+            const statusIcon = g.status === "hadir" ? "✅" : "❌";
+            const keterangan = g.status === "hadir" ? "" : (g.keterangan ? ` - ${g.keterangan}` : "");
+            return `${kelas}  ${nama} ${statusIcon}${keterangan}`;
+        });
 
         const hasil = [judul, ...daftarGuru].join("\n");
 
@@ -53,6 +70,7 @@ export function CopyGuruButton({ data }) {
             }, 3000);
         }
     };
+
 
     return (
         <div className="relative inline-block">
