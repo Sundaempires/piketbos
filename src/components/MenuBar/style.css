@@ -1,0 +1,51 @@
+.menu-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: white;
+    border-top: 1px solid #e5e7eb;
+    padding: 8px 0;
+    z-index: 50;
+}
+
+.menu-buttons {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.menu-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px;
+    color: #6b7280;
+    font-size: 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+}
+
+.menu-button.active {
+    color: #2563eb;
+}
+
+.menu-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+.tab-content {
+    height: calc(100vh - 56px);
+    padding-top: 56px;
+    overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .menu-buttons {
+        padding: 0 40px;
+    }
+}
