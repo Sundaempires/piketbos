@@ -21,8 +21,8 @@ const TabPegawai = () => {
                     </svg>
                 </div>
 
-                <h2 className="text-2xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
-                    <FiUsers className="text-blue-500" />
+                <h2 className="text-xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
+                    {/* <FiUsers className="text-blue-500" /> */}
                     Absen Guru Dan Kayawan  
                 </h2>
 
@@ -51,7 +51,7 @@ const TabPegawai = () => {
                             d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                         ></path>
                     </svg>
-                    Estimasi rilis: Q4 2023
+                    Estimasi rilis: Q4 2025
                 </p>
             </div>
         </div>

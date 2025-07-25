@@ -1,6 +1,6 @@
 "use client";
 
-import { FiPlus, FiClock, FiUser } from "react-icons/fi";
+import { FiPlus, FiClock, FiUser, FiCalendar } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
 import Header from "../Header/Header";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import Link from "next/link";
 import TabSlug from "./TabSlug";
 import LoadingIndicator from "../Loading/load";
 import { NotifSubmit } from "../Loading/NotifSubmit";
+import ButtonCekJadwal from "../Buttons/ButtonCekJadwal";
 
 const TabAbsen = () => {
     const [showPopup, setShowPopup] = useState(false);
@@ -24,7 +25,19 @@ const TabAbsen = () => {
     const [notification, setNotification] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [dataAbsensi, setDataAbsensi] = useState([]);
+    const [dataSlug, setDataSlug] = useState([]);
+    const [selectedData, setSelectedData] = useState(null);
 
+    // === fecth data untuk riwayat absensi ===
+    const fetchAllData = async () => {
+        const res = await fetch("/api/data/all");
+        const json = await res.json();
+
+        if (json.success && Array.isArray(json.data)) {
+            setDataSlug(json.data);
+            setDataAbsensi(json.data);
+        }
+    };
 
     // Ambil data siswa saat kelas/sesi/hari berubah
     useEffect(() => {
@@ -34,10 +47,12 @@ const TabAbsen = () => {
                 const json = await res.json();
                 if (json.success) {
                     setSiswa(json.data.siswa);
-                    setNotif(`Data berhasil diperbarui untuk kelas ${kelas} sesi ${sesi}`);
+                    // === Ubah format sesi menjadi Sesi
+                    const sesiUpper = sesi.charAt(0).toUpperCase() + sesi.slice(1);
+                    setNotif(`Data ( ${kelas} - ${sesiUpper} ) berhasil diperbarui.`);
                     setGuru(json.data.guru);
                     // Auto clear notif setelah 3 detik
-                    setTimeout(() => setNotif(null), 3000);
+                    setTimeout(() => setNotif(null), 4000);
                 } else {
                     console.error("Gagal ambil data siswa:", json.message);
                 }
@@ -46,8 +61,10 @@ const TabAbsen = () => {
             }
         }
 
+        fetchAllData();
         fetchData();
     }, [kelas, sesi, hari]);
+
 
     function getHariIndo(date = new Date()) {
         const hariIndo = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
@@ -106,7 +123,6 @@ const TabAbsen = () => {
             guru: guruPayload
         };
 
-        // console.log("Payload yang dikirim:", payload);
         setIsSubmitting(true);
         try {
             const res = await fetch("/api/absensi", {
@@ -124,6 +140,7 @@ const TabAbsen = () => {
                     type: 'success',
                     message: 'Absensi berhasil dikirim!'
                 });
+                fetchAllData()
                 setIsSubmitting(false);
                 setShowPopup(false)
             } else {
@@ -140,23 +157,6 @@ const TabAbsen = () => {
         }
     };
 
-    const [dataSlug, setDataSlug] = useState([]);
-    const [selectedData, setSelectedData] = useState(null);
-
-    const fetchAllData = async () => {
-        const res = await fetch("/api/data/all");
-        const json = await res.json();
-
-        if (json.success && Array.isArray(json.data)) {
-            setDataSlug(json.data);
-            setDataAbsensi(json.data);
-        }
-    };
-
-    useEffect(() => {
-        fetchAllData();
-    }, []);
-
     // proses perbaikan
     const uniqueDataByTanggalSesi = Array.from(
         new Map(
@@ -165,7 +165,6 @@ const TabAbsen = () => {
     );
 
     const handleClick = (item) => {
-        fetchAllData();
         const { tanggal, sesi } = item;
 
         // Ambil semua data yang memiliki tanggal & sesi sama
@@ -191,16 +190,12 @@ const TabAbsen = () => {
             siswa: allSiswa,
             guru: allGuru,
         });
+        fetchAllData();
     };
-
-    console.log(selectedData);
-    
-
-
 
     return (
         <div className="p-4">
-            {/* Form Tambah Absensi */}
+            {/*=== Button Form Tambah Absensi ===*/}
             <div className="mb-6">
                 <div className="mb-4 mt-2 flex justify-center">
                     <p className="text-sm text-gray-600">
@@ -218,7 +213,15 @@ const TabAbsen = () => {
                 </button>
             </div>
 
-            {/* Riwayat Absensi */}
+            {/*=== Cek Jadwal Guru ===*/}
+            <div className="mb-5">
+                <p className="text-gray-500 text-sm font-medium mb-3 flex items-center gap-1">
+                    <FiCalendar size={14} /> Cek Jadwal Guru
+                </p>
+                <ButtonCekJadwal />
+            </div>
+
+            {/*=== Riwayat Absensi ===*/}
             <div>
                 <p className="text-gray-500 text-sm font-medium mb-3 flex items-center gap-1">
                     <FiClock size={14} /> Riwayat Absensi
@@ -251,12 +254,12 @@ const TabAbsen = () => {
                 </div>
             </div>
 
-            {/* Popups Slug Data */}
+            {/*=== Popups Slug Data ===*/}
             {selectedData && (
                 <TabSlug data={selectedData} onClose={() => setSelectedData(null)} />
             )}
 
-            {/* Popup Form (akan diimplementasikan nanti) */}
+            {/*=== Popup Form ===*/}
             <AnimatePresence>
                 {showPopup && (
                     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -278,17 +281,18 @@ const TabAbsen = () => {
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                                     </svg>
                                 </button>
-                                {/* Notifikasi */}
+
+                                {/*=== Notifikasi data form diperbarui ===*/}
                                 {notif && (
                                     <AnimatePresence>
                                         <motion.div
-                                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                                            initial={{ opacity: 0, y: -50}}
+                                            animate={{ opacity: 1, y: 0}}
                                             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-                                            transition={{ type: 'spring', damping: 25, stiffness: 300 }}
-                                            className="fixed bottom-20 left-1/2 transform -translate-x-1/2 z-50 w-2/3"
+                                            transition={{ type: 'spring', damping: 20, stiffness: 300 }}
+                                            className="fixed top-16 mt-1 left-1/2 transform -translate-x-1/2 z-50 w-80"
                                         >
-                                            <div className="flex items-center p-4 rounded-lg bg-green-50 text-green-700 text-sm border border-green-200 shadow-lg">
+                                            <div className="flex justify-center items-center py-2.5 rounded-lg bg-green-50 text-green-700 text-md border border-green-200 shadow-lg">
                                                 <svg
                                                     className="w-5 h-5 mr-2 text-green-500 flex-shrink-0"
                                                     fill="none"
@@ -302,27 +306,7 @@ const TabAbsen = () => {
                                                         d="M5 13l4 4L19 7"
                                                     />
                                                 </svg>
-                                                <span>{notif}</span>
-                                                {/* <motion.button
-                                                    whileHover={{ scale: 1.1 }}
-                                                    whileTap={{ scale: 0.9 }}
-                                                    onClick={() => setNotif(null)}
-                                                    className="ml-3 text-green-500 hover:text-green-700"
-                                                >
-                                                    <svg
-                                                        className="w-4 h-4"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={2}
-                                                            d="M6 18L18 6M6 6l12 12"
-                                                        />
-                                                    </svg>
-                                                </motion.button> */}
+                                                <span className="">{notif}</span>
                                             </div>
                                         </motion.div>
                                     </AnimatePresence>
@@ -488,7 +472,8 @@ const TabAbsen = () => {
                     </div>
                 )}
             </AnimatePresence>
-            {/* Notif Succes Submit */}
+
+            {/*=== Notif Succes Submit ===*/}
             {notification && (
                 <NotifSubmit
                     type={notification.type}

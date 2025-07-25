@@ -145,7 +145,7 @@ export default function LoginPage() {
 
             <div className="bg-white px-8 py-4 border-t border-gray-100 fixed bottom-0 w-full">
               <p className="text-xs text-gray-500 text-center">
-                © 2023 hamdunmuzadi. All rights reserved.
+                © 2025 hamdunmuzadi. All rights reserved.
               </p>
             </div>
           </motion.div>

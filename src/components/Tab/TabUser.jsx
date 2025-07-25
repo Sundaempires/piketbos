@@ -55,7 +55,7 @@ const TabUser = () => {
                     {/* ID Pengguna */}
                     <div className="space-y-1">
                         <p className="text-sm text-gray-500">ID Pengguna</p>
-                        <p className="p-3 bg-gray-50 rounded-lg font-mono">
+                        <p className="p-3 bg-gray-50 rounded-lg">
                             {user.id}
                         </p>
                     </div>

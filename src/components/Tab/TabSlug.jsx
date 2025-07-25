@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { CopyGuruButton } from "../Buttons/CopyGuruButton";
+import ButtonDownloadPdf from "../Buttons/ButtonDownloadPdf";
 
 export default function TabSlug({ data, onClose }) {
     const [tab, setTab] = useState("siswa");
@@ -29,10 +30,6 @@ export default function TabSlug({ data, onClose }) {
         visible: { opacity: 1 },
         exit: { opacity: 0 }
     };
-
-    console.log("ini log dari tab", data);
-
-
 
     return (
         <AnimatePresence>
@@ -71,10 +68,7 @@ export default function TabSlug({ data, onClose }) {
                         </div>
                     </div>
                     <CopyGuruButton data={data} />
-                    <button className="ml-2 bg-blue-100 text-blue-700 p-2 text-xl rounded-lg">
-                        <MdOutlineFileDownload />
-                    </button>
-
+                    <ButtonDownloadPdf data={data}/>
                     {/* Tabs */}
                     <div className="flex border-b border-gray-200 mb-4">
                         <button
@@ -97,7 +91,7 @@ export default function TabSlug({ data, onClose }) {
                         </button>
                     </div>
 
-                    {/* Tab Content */}
+                    {/*=== Tab Content ===*/}
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={tab}
@@ -113,10 +107,10 @@ export default function TabSlug({ data, onClose }) {
                                         <thead className="text-left text-gray-500 border-b">
                                             <tr>
                                                 <th className="pb-3 font-medium">No</th>
-                                                {/* <th className="pb-3 font-medium">Kelas</th> */}
-                                                <th className="pb-3 font-medium">Nama</th>
-                                                <th className="pb-3 font-medium">L/P</th>
-                                                <th className="pb-3 font-medium">Ket</th>
+                                                <th className="pb-3 pl-1.5 font-medium">Kls</th>
+                                                <th className="pb-3 pl-2 font-medium">Nama</th>
+                                                {/* <th className="pb-3 font-medium">L/P</th> */}
+                                                <th className="pb-3 pl-1.5 font-medium">Ket</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200">
@@ -146,7 +140,7 @@ export default function TabSlug({ data, onClose }) {
                                                 <th className="pb-3 font-medium text-center">Kelas</th>
                                                 <th className="pb-3 font-medium">Nama</th>
                                                 <th className="pb-3 font-medium">Status</th>
-                                                <th className="pb-3 font-medium">Keterangan</th>
+                                                <th className="pb-3 font-medium">Ket</th>
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200">
