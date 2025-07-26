@@ -5,6 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { CopyGuruButton } from "../Buttons/CopyGuruButton";
 import ButtonDownloadPdf from "../Buttons/ButtonDownloadPdf";
+import ButtonLaporanBulanan from "../Buttons/ButtonLaporanBulanan";
+import ButtonDownloadALl from "../Buttons/ButtonDownloadAll";
 
 export default function TabSlug({ data, onClose }) {
     const [tab, setTab] = useState("siswa");
@@ -68,7 +70,10 @@ export default function TabSlug({ data, onClose }) {
                         </div>
                     </div>
                     <CopyGuruButton data={data} />
-                    <ButtonDownloadPdf data={data}/>
+                    <ButtonDownloadPdf data={data} />
+                    {/* testing inimah */}
+                    <ButtonDownloadALl data={data} />
+
                     {/* Tabs */}
                     <div className="flex border-b border-gray-200 mb-4">
                         <button

@@ -1,13 +1,13 @@
 'use client';
 
-import { TbFileDownload } from "react-icons/tb";
+import { MdOutlineFileDownload } from 'react-icons/md';
 import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { useEffect, useState } from 'react';
 import { FiCheck } from 'react-icons/fi';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ButtonDownloadPdf = ({ data }) => {
+const ButtonDownloadALl = ({ data }) => {
 
     // === Notifikasi succes download ===
     const [showSuccess, setShowSuccess] = useState(false);
@@ -86,7 +86,7 @@ const ButtonDownloadPdf = ({ data }) => {
             doc.setFontSize(14);
             const pageWidth = doc.internal.pageSize.getWidth();
 
-            const title1 = 'REKAPITULASI KETIDAKHADIRAN GURU DAN SISWA';
+            const title1 = 'REKAPITULASI KEHADIRAN GURU DAN SISWA';
             const title2 = 'MTs NEGERI 4 SUMEDANG';
 
             const textWidth1 = doc.getTextWidth(title1);
@@ -117,30 +117,37 @@ const ButtonDownloadPdf = ({ data }) => {
             // === Judul Tabel Guru ===
             doc.setFont('helvetica', 'bold');
             doc.setFontSize(12);
-            doc.text('Daftar Guru Yang Tidak Hadir', 14, 43); // Tepat di atas tabel guru
+            doc.text('Daftar Kehadiran Guru', 14, 43); // Tepat di atas tabel guru
 
             // === Siapkan data guru minimal 8 baris ===
             let guruData = [...guru];
-            while (guruData.length < 8) {
+            while (guruData.length < 15) {
                 guruData.push({ nama: '', a: '', kelas: '', keterangan: '' });
             }
 
             // === Ambil data Guru yang tidak hadir ===
-            const guruTidakHadir = guru.filter(g => g.keterangan && g.keterangan.toLowerCase() !== 'hadir');
+            const dataGuru = guru.map(g => ({
+                ...g,
+                status: g.status
+                    ? g.status.toLowerCase().replace(/\b\w/g, c => c.toUpperCase())
+                    : ''
+            }));
 
-            while (guruTidakHadir.length < 8) {
-                guruTidakHadir.push({ nama: '', a: '', kelas: '', keterangan: '' });
-            }
+            console.log(dataGuru);
+
+
+
+
 
             // === Tabel Guru ===
             autoTable(doc, {
                 startY: 45,
-                head: [['No', 'Nama Guru', 'Mapel', 'Jam', 'Kelas', 'Keterangan']],
-                body: guruTidakHadir.map((g, index) => [
+                head: [['No', 'Nama Guru', 'Mapel', 'Hadir', 'Kelas', 'Keterangan']],
+                body: dataGuru.map((g, index) => [
                     index + 1,
                     g.nama || '',
                     g.a || '',
-                    g.a || '',
+                    g.status || '',
                     g.kelas || '',
                     g.keterangan || '',
                 ]),
@@ -182,9 +189,9 @@ const ButtonDownloadPdf = ({ data }) => {
 
             // === Gabungkan data siswa menjadi satu array dua kolom ===
             const combinedSiswa = [];
-            for (let i = 0; i < 20; i++) {
+            for (let i = 0; i < 14; i++) {
                 const left = siswa[i] || { id: '', nama: '', keterangan: '' };
-                const right = siswa[i + 20] || { id: '', nama: '', keterangan: '' };
+                const right = siswa[i + 14] || { id: '', nama: '', keterangan: '' };
 
                 combinedSiswa.push([
                     i + 1,
@@ -266,7 +273,7 @@ const ButtonDownloadPdf = ({ data }) => {
             onClick={handleDownload}
             className="ml-2 bg-blue-100 text-blue-700 p-2 text-xl rounded-lg relative"
         >
-            <TbFileDownload />
+            <MdOutlineFileDownload />
             <AnimatePresence>
                 {(showSuccess || showError) && (
                     <motion.div
@@ -290,4 +297,4 @@ const ButtonDownloadPdf = ({ data }) => {
     );
 };
 
-export default ButtonDownloadPdf;
+export default ButtonDownloadALl;

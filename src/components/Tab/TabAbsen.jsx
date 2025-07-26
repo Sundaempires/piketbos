@@ -9,6 +9,7 @@ import TabSlug from "./TabSlug";
 import LoadingIndicator from "../Loading/load";
 import { NotifSubmit } from "../Loading/NotifSubmit";
 import ButtonCekJadwal from "../Buttons/ButtonCekJadwal";
+import ButtonDownloadALl from "../Buttons/ButtonDownloadAll";
 
 const TabAbsen = () => {
     const [showPopup, setShowPopup] = useState(false);

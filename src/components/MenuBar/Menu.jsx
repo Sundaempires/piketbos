@@ -1,10 +1,11 @@
 "use client"
 import { useState } from "react";
-import { FiPlusSquare, FiUser, FiUsers } from "react-icons/fi";
+import { FiFileText, FiPlusSquare, FiUser, FiUsers } from "react-icons/fi";
 import TabUser from "../Tab/TabUser";
 import TabAbsen from "../Tab/TabAbsen";
 import TabPegawai from "../Tab/TabPegawai";
 import TabSlug from "../Tab/TabSlug";
+import TabRekap from "../Tab/TabRekap";
 
 const Menu = () => {
     const [activeTab, setActiveTab] = useState("profil");
@@ -14,6 +15,7 @@ const Menu = () => {
             case "profil": return <TabUser />;
             case "absen": return <TabAbsen />;
             case "pegawai": return <TabPegawai />;
+            case "rekap": return <TabRekap />;
             default: return <TabUser />;
         }
     };
@@ -38,6 +40,10 @@ const Menu = () => {
                 <button onClick={() => setActiveTab("pegawai")} className={`flex flex-col items-center p-2 ${activeTab === "pegawai" ? "text-blue-600" : "text-gray-500"}`}>
                     <FiUsers className="text-xl" />
                     <span className="text-xs mt-1">Pegawai</span>
+                </button>
+                <button onClick={() => setActiveTab("rekap")} className={`flex flex-col items-center p-2 ${activeTab === "pegawai" ? "text-blue-600" : "text-gray-500"}`}>
+                    <FiFileText className="text-xl" />
+                    <span className="text-xs mt-1">Rekap</span>
                 </button>
             </div>
         </div>
